@@ -37,6 +37,14 @@ jobs:
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'          
+      - name: Install Asciidoctor
+        run: gem install asciidoctor        
+      - name: Convert AsciiDoc to HTML
+        run: asciidoctor *.adoc
 
   # Deployment job
   deploy:
