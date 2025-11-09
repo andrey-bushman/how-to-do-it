@@ -1,13 +1,3 @@
-# _config.yml
-plugins:
-  - jekyll-asciidoc
-
-asciidoc:
-  safe: safe
-  attributes:
-    icons: font
-    source-highlighter: rouge
-    
 # Sample workflow for building and deploying a Jekyll site to GitHub Pages
 name: Deploy Jekyll with GitHub Pages dependencies preinstalled
 
@@ -36,17 +26,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
+      - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+      - name: Install Asciidoctor
+        run: gem install asciidoctor
+      - name: Convert AsciiDoc
+        run: asciidoctor *.adoc
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          source: ./
-          destination: ./_site
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
 
   # Deployment job
   deploy:
